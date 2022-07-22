@@ -117,12 +117,15 @@ func createStringWriter(fileData inputFile) func(string, bool) {
 		err := ensureDir(jsonDir)
 		checkError(err)
 		jsonName = fmt.Sprintf("%s", filepath.Base(*fileData.outputPath))
-	} else if *fileData.outputPath == "basefile" && *fileData.convType == "text" || *fileData.convType == "plaintext" {
+	} else {
+		var extension string
+		if *fileData.convType == "text" || *fileData.convType == "plaintext" {
+			extension = "txt"
+		} else {
+			extension = "json"
+		}
 		jsonDir = filepath.Dir(fileData.filePath)
-		jsonName = fmt.Sprintf("%s.txt", strings.TrimSuffix(filepath.Base(fileData.filePath), ".log"))
-	} else if *fileData.outputPath == "basefile" && *fileData.convType == "json" {
-		jsonDir = filepath.Dir(fileData.filePath)
-		jsonName = fmt.Sprintf("%s.json", strings.TrimSuffix(filepath.Base(fileData.filePath), ".log"))
+		jsonName = fmt.Sprintf("%s.%s", strings.TrimSuffix(filepath.Base(fileData.filePath), ".log"), extension)
 	}
 
 	finalLocation := fmt.Sprintf("%s/%s", jsonDir, jsonName)
